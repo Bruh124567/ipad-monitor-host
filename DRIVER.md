@@ -53,9 +53,3 @@ vdctl remove
 vdctl add 2732 2048 60
 ```
 `vdctl uninstall` removes the device again.
-
-## Where problems are most likely
-
-The driver code follows Microsoft's IddCx sample closely, but nothing here has been compiled or run, and the three
-files most likely to need adjusting are the hand-written project file (`IpadMonitorIdd.vcxproj`), the INF, and
-the IOCTL hook (`EvtIddCxDeviceIoControl`) in `Driver.cpp`. Send me the first error you hit and I'll fix it.
