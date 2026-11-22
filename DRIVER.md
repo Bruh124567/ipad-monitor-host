@@ -1,7 +1,7 @@
-# iPad Monitor: step 2a (virtual display driver)
+# iPad Monitor: virtual display driver
 
 Adds a real second monitor to Windows. Nothing is sent to the iPad yet; this step only proves the driver loads
-and Windows treats the virtual monitor as a display. Capture, encoding and decoding come in step 2b.
+and Windows treats the virtual monitor as a display. Capture, encoding and decoding come later
 
 ```
 driver/        IddCx virtual display driver (C++, user-mode)
@@ -53,12 +53,6 @@ vdctl remove
 vdctl add 2732 2048 60
 ```
 `vdctl uninstall` removes the device again.
-
-## What to send me
-
-- Build errors (exact text), from the driver or the tool.
-- Anything that fails in step 2, with the exact message.
-- If the device shows a yellow warning in Device Manager: the "Code" number from its Properties window.
 
 ## Where problems are most likely
 
