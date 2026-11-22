@@ -1,3 +1,3 @@
 # host
 
-basically useless for now, it's gonna work though i just gotta make the driver and then we'll see
+basically useless for now, it has a stub driver that adds a second display, though no display data is actually being streamed to the client yet.
