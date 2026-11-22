@@ -2,6 +2,7 @@
 //
 //   vdctl install <path\to\IpadMonitorIdd.inf>   (administrator)
 //   vdctl uninstall                              (administrator)
+//   vdctl restart                                (administrator)
 //   vdctl status
 //   vdctl add <width> <height> [hz]              (default 60 Hz)
 //   vdctl remove
@@ -31,6 +32,49 @@ const GUID kDisplayClass = {0x4d36e968, 0xe325, 0x11ce, {0xbf, 0xc1, 0x08, 0x00,
 void PrintWin32Error(const char* what, DWORD code = GetLastError()) {
   std::fprintf(stderr, "%s failed (Win32 error %lu)\n", what, code);
   if (code == ERROR_ACCESS_DENIED) std::fprintf(stderr, "  Run this command from an administrator prompt.\n");
+}
+
+// Restarts a device (stop + start), the same as disabling and re-enabling it in Device Manager.
+bool RestartDevice(HDEVINFO set, SP_DEVINFO_DATA& dev) {
+  SP_PROPCHANGE_PARAMS params = {};
+  params.ClassInstallHeader.cbSize = sizeof(SP_CLASSINSTALL_HEADER);
+  params.ClassInstallHeader.InstallFunction = DIF_PROPERTYCHANGE;
+  params.StateChange = DICS_PROPCHANGE;
+  params.Scope = DICS_FLAG_GLOBAL;
+  params.HwProfile = 0;
+  if (!SetupDiSetClassInstallParamsW(set, &dev, &params.ClassInstallHeader, sizeof(params))) return false;
+  return SetupDiCallClassInstaller(DIF_PROPERTYCHANGE, set, &dev) != FALSE;
+}
+
+bool HasOurHardwareId(HDEVINFO set, SP_DEVINFO_DATA& dev) {
+  wchar_t ids[512] = {};
+  if (!SetupDiGetDeviceRegistryPropertyW(set, &dev, SPDRP_HARDWAREID, nullptr, reinterpret_cast<PBYTE>(ids),
+                                         sizeof(ids) - sizeof(wchar_t), nullptr)) {
+    return false;
+  }
+  for (const wchar_t* p = ids; *p; p += wcslen(p) + 1) {
+    if (_wcsicmp(p, kHardwareId) == 0) return true;
+  }
+  return false;
+}
+
+int Restart() {
+  HDEVINFO set = SetupDiGetClassDevsW(&kDisplayClass, nullptr, nullptr, DIGCF_PRESENT);
+  if (set == INVALID_HANDLE_VALUE) {
+    PrintWin32Error("SetupDiGetClassDevs");
+    return 1;
+  }
+  int restarted = 0;
+  SP_DEVINFO_DATA dev = {};
+  dev.cbSize = sizeof(dev);
+  for (DWORD i = 0; SetupDiEnumDeviceInfo(set, i, &dev); ++i) {
+    if (!HasOurHardwareId(set, dev)) continue;
+    if (RestartDevice(set, dev)) ++restarted;
+    else PrintWin32Error("Restart device");
+  }
+  SetupDiDestroyDeviceInfoList(set);
+  std::printf("Restarted %d device(s).\n", restarted);
+  return restarted > 0 ? 0 : 1;
 }
 
 int Install(const wchar_t* infArg) {
@@ -72,6 +116,9 @@ int Install(const wchar_t* infArg) {
       } else {
         std::printf("Driver installed.%s\n", reboot ? " A reboot is required." : "");
         rc = 0;
+        // The device fails to start the first time after installation but works after a restart, so do that now.
+        if (RestartDevice(set, dev)) std::printf("Device restarted.\n");
+        else std::printf("Couldn't restart the device automatically; run `vdctl restart`.\n");
       }
     }
   }
@@ -174,6 +221,7 @@ void Usage() {
   std::printf("Usage:\n"
               "  vdctl install <IpadMonitorIdd.inf>   (administrator)\n"
               "  vdctl uninstall                      (administrator)\n"
+              "  vdctl restart                        (administrator)\n"
               "  vdctl status\n"
               "  vdctl add <width> <height> [hz]\n"
               "  vdctl remove\n");
@@ -187,6 +235,7 @@ int wmain(int argc, wchar_t** argv) {
   if (cmd == L"install" && argc == 3) return Install(argv[2]);
   if (cmd == L"uninstall") return Uninstall();
   if (cmd == L"status") return Status();
+  if (cmd == L"restart") return Restart();
   if (cmd == L"remove") return Remove();
   if (cmd == L"add" && (argc == 4 || argc == 5)) {
     const UINT32 w = static_cast<UINT32>(_wtoi(argv[2]));
