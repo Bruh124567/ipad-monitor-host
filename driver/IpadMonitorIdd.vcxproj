@@ -43,14 +43,23 @@
     <OutDir>$(MSBuildProjectDirectory)\build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(MSBuildProjectDirectory)\build\obj\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- The IddCx headers and stub library sit in per-version folders that the toolset doesn't add by itself. -->
+    <KitsRoot>$(MSBuildProgramFiles32)\Windows Kits\10\</KitsRoot>
+    <IddCxVersion>$(IDDCX_VERSION_MAJOR).$(IDDCX_VERSION_MINOR)</IddCxVersion>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <PreprocessorDefinitions>UNICODE;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;IDDCX_VERSION_MAJOR=$(IDDCX_VERSION_MAJOR);IDDCX_VERSION_MINOR=$(IDDCX_VERSION_MINOR);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(KitsRoot)Include\$(WindowsTargetPlatformVersion)\um\iddcx\$(IddCxVersion);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(KitsRoot)Lib\$(WindowsTargetPlatformVersion)\um\$(Platform)\iddcx\$(IddCxVersion)\iddcxstub.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Driver.cpp" />
