@@ -250,6 +250,20 @@ int main(int argc, char** argv) {
     std::printf("Usage: ipad_host [--width 480] [--height 270] [--fps 30]\n");
     return 1;
   }
+  // Held for the life of the process. A second launch sees it and exits.
+  HANDLE instanceLock = CreateMutexW(nullptr, TRUE, L"Local\\ipad-monitor-host");
+  if (!instanceLock) {
+    std::printf("Could not create the single-instance lock (error %lu)\n", GetLastError());
+    return 1;
+  }
+  if (GetLastError() == ERROR_ALREADY_EXISTS) {
+    std::printf("Another iPad Monitor host is already running.\n");
+    std::printf("Press any key to exit...\n");
+    _getch();
+    CloseHandle(instanceLock);
+    return 1;
+  }
+
   timeBeginPeriod(1);  // finer sleep granularity for frame pacing
   if (!winsockStart()) {
     std::printf("Winsock failed to start\n");
