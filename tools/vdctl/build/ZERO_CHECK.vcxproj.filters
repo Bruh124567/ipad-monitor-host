@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\hapci\source\repos\Bruh124567\ipad-monitor-host\tools\vdctl\build\CMakeFiles\1671a0b15f74ea6b26163c53352f2b81\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{8D04DF30-88CB-3AC0-8CB4-F42796ED899A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

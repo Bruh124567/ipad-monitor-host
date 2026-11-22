@@ -9,7 +9,7 @@ Class=Display
 ClassGuid={4d36e968-e325-11ce-bfc1-08002be10318}
 Provider=%ManufacturerName%
 CatalogFile=IpadMonitorIdd.cat
-DriverVer=11/22/2026,1.0.0.0
+DriverVer=11/22/2026,1.0.0.1
 PnpLockdown=1
 
 [DestinationDirs]
@@ -49,6 +49,7 @@ UmdfHostProcessSharing = ProcessSharingDisabled
 [IpadMonitorIdd_Install]
 UmdfLibraryVersion = 2.31.0
 ServiceBinary = %13%\IpadMonitorIdd.dll
+UmdfExtensions = IddCx0102
 
 [WUDFRD_ServiceInstall]
 DisplayName = %WudfRdDisplayName%

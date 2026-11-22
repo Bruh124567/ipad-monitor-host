@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\hapci\source\repos\Bruh124567\ipad-monitor-host\tools\vdctl\vdctl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\hapci\source\repos\Bruh124567\ipad-monitor-host\tools\vdctl\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{C6E8CB6C-E757-3D64-BB1C-DAD3975D16CC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

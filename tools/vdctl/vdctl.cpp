@@ -7,6 +7,7 @@
 //   vdctl remove
 
 #include <windows.h>
+#include <cfgmgr32.h>
 #include <newdev.h>
 #include <setupapi.h>
 
@@ -17,6 +18,10 @@
 #include <vector>
 
 #include "../../common/ipad_idd_ioctl.h"
+
+#ifndef MAX_CLASS_NAME_LEN
+#define MAX_CLASS_NAME_LEN 128
+#endif
 
 namespace {
 

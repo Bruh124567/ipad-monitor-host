@@ -1,0 +1,3 @@
+C:/Users/hapci/source/repos/Bruh124567/ipad-monitor-host/tools/vdctl/build/CMakeFiles/vdctl.dir
+C:/Users/hapci/source/repos/Bruh124567/ipad-monitor-host/tools/vdctl/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/hapci/source/repos/Bruh124567/ipad-monitor-host/tools/vdctl/build/CMakeFiles/ZERO_CHECK.dir
