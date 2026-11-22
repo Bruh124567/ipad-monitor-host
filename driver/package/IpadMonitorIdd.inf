@@ -1,0 +1,70 @@
+;
+; iPad Monitor virtual display driver (IddCx, UMDF 2).
+; Test-signed only: see README.md.
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Display
+ClassGuid={4d36e968-e325-11ce-bfc1-08002be10318}
+Provider=%ManufacturerName%
+CatalogFile=IpadMonitorIdd.cat
+DriverVer=11/22/2026,1.0.0.1
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 13
+
+[SourceDisksNames]
+1 = %DiskName%
+
+[SourceDisksFiles]
+IpadMonitorIdd.dll = 1
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTamd64.10.0...19041
+
+[Standard.NTamd64.10.0...19041]
+%DeviceName% = IpadMonitor_Install, Root\IpadMonitorIdd
+
+[IpadMonitor_Install.NT]
+CopyFiles = UMDriverCopy
+
+[IpadMonitor_Install.NT.hw]
+AddReg = IpadMonitor_HardwareSettings
+
+[IpadMonitor_HardwareSettings]
+HKR,,"UpperFilters",%REG_MULTI_SZ%,"IndirectKmd"
+HKR,"WUDF","DeviceGroupId",%REG_SZ%,"IpadMonitorIddGroup"
+
+[IpadMonitor_Install.NT.Services]
+AddService = WUDFRd,0x000001fa,WUDFRD_ServiceInstall
+
+[IpadMonitor_Install.NT.Wdf]
+UmdfService = IpadMonitorIdd,IpadMonitorIdd_Install
+UmdfServiceOrder = IpadMonitorIdd
+UmdfKernelModeClientPolicy = AllowKernelModeClients
+UmdfHostProcessSharing = ProcessSharingDisabled
+
+[IpadMonitorIdd_Install]
+UmdfLibraryVersion = 2.31.0
+ServiceBinary = %13%\IpadMonitorIdd.dll
+UmdfExtensions = IddCx0102
+
+[WUDFRD_ServiceInstall]
+DisplayName = %WudfRdDisplayName%
+ServiceType = 1
+StartType = 3
+ErrorControl = 1
+ServiceBinary = %12%\WUDFRd.sys
+
+[UMDriverCopy]
+IpadMonitorIdd.dll
+
+[Strings]
+ManufacturerName = "iPad Monitor"
+DiskName = "iPad Monitor Virtual Display Installation Disk"
+WudfRdDisplayName = "Windows Driver Foundation - User-mode Driver Framework Reflector"
+DeviceName = "iPad Monitor Virtual Display"
+REG_MULTI_SZ = 0x00010000
+REG_SZ = 0x00000000
