@@ -1,7 +1,7 @@
 # iPad Monitor: virtual display driver
 
 Adds a real second monitor to Windows. Nothing is sent to the iPad yet; this step only proves the driver loads
-and Windows treats the virtual monitor as a display. Capture, encoding and decoding come later
+and Windows treats the virtual monitor as a display. Capture, encoding and decoding come later.
 
 ```
 driver/        IddCx virtual display driver (C++, user-mode)
